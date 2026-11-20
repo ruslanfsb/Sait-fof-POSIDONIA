@@ -30,7 +30,7 @@ export const company = {
    * Used for the canonical link, social-sharing image and sitemap.
    * Leave empty until the final address is known.
    */
-  siteUrl: '',
+  siteUrl: 'https://ruslanfsb.github.io/Sait-fof-POSIDONIA/',
 
   /**
    * Public contact email, e.g. 'hello@your-domain.com'.
