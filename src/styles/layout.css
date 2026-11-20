@@ -5,23 +5,22 @@
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0.75rem;
   text-decoration: none;
   color: inherit;
   border-radius: 6px;
 }
 
 .brand-mark {
-  width: 1.5rem;
-  height: 1.8rem;
+  width: 2.5rem;
+  height: 1.83rem;
   flex: none;
 }
 
 .brand-word {
-  font-weight: 650;
-  font-size: 1.0625rem;
-  letter-spacing: 0.2em;
-  margin-right: -0.2em;
+  width: 8.25rem;
+  height: 0.95rem;
+  flex: none;
 }
 
 /* ------------------------------------------------------------------ */
@@ -336,8 +335,8 @@ html.menu-locked {
 }
 
 .hero-eyebrow-mark {
-  width: 0.95rem;
-  height: 1.15rem;
+  width: 1.5rem;
+  height: 1.1rem;
 }
 
 .hero-title {
@@ -585,4 +584,14 @@ html.menu-locked {
     grid-template-columns: 1.4fr 1fr 0.8fr;
     gap: 3rem;
   }
+}
+
+.footer-brand .brand-mark {
+  width: 3.25rem;
+  height: 2.375rem;
+}
+
+.footer-brand .brand-word {
+  width: 10.5rem;
+  height: 1.21rem;
 }

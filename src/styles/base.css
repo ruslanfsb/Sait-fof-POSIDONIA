@@ -46,7 +46,33 @@
   --accent: var(--teal-700);
   --focus: var(--teal-700);
 
+  /* Logo colors (full-color version); reversed on dark surfaces below */
+  --logo-leaf: url(#pos-leaf);
+  --logo-wave: url(#pos-wave);
+  --logo-ink: #033e3c;
+
   color-scheme: light;
+}
+
+/* Dark surfaces use the reversed logo */
+.hero,
+.site-footer,
+.commitment,
+.section--dark,
+.section--teal,
+body:has(.hero) .site-header:not(.is-scrolled),
+.site-header.menu-open {
+  --logo-leaf: url(#pos-leaf-rev);
+  --logo-wave: url(#pos-wave-rev);
+  --logo-ink: var(--paper);
+}
+
+/* Holds the logo gradients/symbols; must stay rendered (not display:none) for gradients to work */
+.svg-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 
 @font-face {

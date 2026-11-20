@@ -61,13 +61,24 @@ test.describe('home page', () => {
     expect(overflow).toBeLessThanOrEqual(0);
   });
 
-  test('presents honest product statuses', async ({ page }) => {
+  test('presents the three products and future research honestly', async ({ page }) => {
     await page.goto('/');
     const cards = page.locator('.product');
-    await expect(cards).toHaveCount(4);
-    await expect(page.locator('.product .status--development')).toHaveCount(2);
-    await expect(page.locator('.product .status--research')).toHaveCount(2);
+    await expect(cards).toHaveCount(3);
+    await expect(cards.locator('h3')).toHaveText(['Loose-Fill Insulation', 'Insulation Boards', 'Eco-Plastic']);
+    await expect(cards.locator('.status')).toHaveText([/In development/, /In development/, /In development/]);
+    await expect(page.locator('.future .status')).toHaveText('Future research');
     await expect(page.getByText('No POSIDONIA product is commercially available or certified')).toBeVisible();
+  });
+
+  test('renders the official logo with visible colors', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('.site-header .brand-mark use')).toHaveAttribute('href', '#pos-mark');
+    // The sprite must stay rendered, otherwise gradient fills disappear.
+    const display = await page.locator('.svg-sprite').evaluate((el) => getComputedStyle(el).display);
+    expect(display).not.toBe('none');
+    const res = await page.request.get('/posidonia-logo.svg');
+    expect(res.status()).toBe(200);
   });
 
   test('shows all content with reduced motion', async ({ page }) => {

@@ -64,7 +64,7 @@ export const company = {
 export const seo = {
   title: 'POSIDONIA — Sustainable Materials from Mediterranean Seagrass | Cyprus',
   description:
-    'POSIDONIA is a Cyprus-based startup researching how responsibly sourced, beach-cast Posidonia oceanica can become natural insulation and a new family of sustainable materials.',
+    'POSIDONIA is a Cyprus-based startup developing natural insulation and eco-plastic from responsibly sourced, beach-cast Posidonia oceanica — the start of a new family of sustainable materials.',
   ogImageAlt: 'POSIDONIA — From the Mediterranean. For a Sustainable Future.',
   themeColor: '#123F37',
 };
@@ -106,7 +106,7 @@ export const about = {
   title: 'A materials company, grown from a Mediterranean plant.',
   paragraphs: [
     'POSIDONIA is a startup from Cyprus exploring how suitable, legally collected beach-cast seagrass can become a renewable feedstock for sustainable manufacturing.',
-    'Our first development direction is natural insulation for buildings. It is a starting point, not a boundary: we are building the research base for a wider family of materials — insulation, packaging, biocomposites and applications still to be discovered.',
+    'Our first products in development are two types of natural insulation for buildings and an eco-plastic made with Posidonia fibers. They are a starting point, not a boundary: we are building the research base for a wider family of materials and applications still to be discovered.',
   ],
   philosophy:
     'Nature provides valuable resources. Technology and responsible innovation can help transform them into practical solutions for the future.',
@@ -179,12 +179,11 @@ export const material = {
 /* Innovations                                                         */
 /* ------------------------------------------------------------------ */
 
-export type ProductStatus = 'development' | 'research';
-export type ProductArt = 'loosefill' | 'boards' | 'packaging' | 'composites';
+export type ProductArt = 'loosefill' | 'boards' | 'ecoplastic';
 
 export interface Product {
   name: string;
-  status: ProductStatus;
+  /** Short status line shown on the card — keep it honest. */
   statusLabel: string;
   summary: string;
   focusLabel: string;
@@ -197,11 +196,10 @@ export const innovations = {
   label: 'Our Innovations',
   title: 'One material. A growing family of products.',
   intro:
-    'We begin with insulation because buildings need practical natural alternatives — and because it is a realistic first step for validating the material. Further applications follow as our research progresses.',
+    'Our first three products are two natural insulation materials for buildings and an eco-plastic. All three are in development — and they are the beginning of a wider materials platform.',
   products: [
     {
       name: 'Loose-Fill Insulation',
-      status: 'development',
       statusLabel: 'In development · First prototypes',
       summary:
         'Processed Posidonia fibers as loose-fill insulation for wall cavities, roof structures, attic spaces and other suitable construction applications.',
@@ -212,7 +210,6 @@ export const innovations = {
     },
     {
       name: 'Insulation Boards',
-      status: 'development',
       statusLabel: 'In development',
       summary:
         'Rigid and semi-rigid panels that combine processed fibers with natural or low-impact binding systems, for selected building insulation applications.',
@@ -227,27 +224,34 @@ export const innovations = {
       art: 'boards',
     },
     {
-      name: 'Sustainable Packaging',
-      status: 'research',
-      statusLabel: 'Future research',
+      name: 'Eco-Plastic',
+      statusLabel: 'In development · Early research',
       summary:
-        'Exploring Posidonia-derived fibers with suitable binders or biopolymer systems for protective packaging, molded components and experimental films.',
-      focusLabel: 'Possible directions',
-      focus: ['Protective packaging', 'Molded components', 'Experimental films & bags'],
-      note: 'Properties such as compostability or food contact are not yet tested.',
-      art: 'packaging',
-    },
-    {
-      name: 'Biocomposites & New Materials',
-      status: 'research',
-      statusLabel: 'Future research',
-      summary:
-        'A platform for what comes next: fiber-based composite panels, decorative interior materials, molded fiber products and sustainable consumer goods.',
-      focusLabel: 'Possible directions',
-      focus: ['Composite panels', 'Interior materials', 'Molded fiber products', 'Consumer products'],
-      art: 'composites',
+        'A bio-based plastic material that combines processed Posidonia fibers with suitable binders or biopolymers — for products where conventional plastic could be partly replaced.',
+      focusLabel: 'Research areas',
+      focus: [
+        'Fiber–biopolymer formulations',
+        'Strength & flexibility',
+        'Molding & processing',
+        'Moisture behavior',
+        'End-of-life options',
+      ],
+      note: 'Biodegradability, compostability or food-contact suitability will be claimed only after testing.',
+      art: 'ecoplastic',
     },
   ] satisfies Product[],
+  future: {
+    label: 'Future research',
+    title: 'Where the material could go next',
+    items: [
+      'Sustainable packaging',
+      'Molded fiber products',
+      'Composite panels',
+      'Decorative interior materials',
+      'Consumer products',
+    ],
+    note: 'Ideas for later research stages — not products in development.',
+  },
   disclaimer:
     'Illustrations are conceptual. No POSIDONIA product is commercially available or certified at this stage.',
 };
@@ -282,7 +286,7 @@ export const processSection = {
     },
     {
       title: 'Product Development',
-      text: 'Formulate, form and prototype products — from loose-fill to boards and beyond.',
+      text: 'Formulate, form and prototype products — loose-fill and board insulation, and eco-plastic.',
       icon: 'product',
     },
     {
@@ -457,6 +461,7 @@ export const roadmap = {
   focusTitle: 'Current focus',
   focus: [
     'Developing our first insulation prototypes',
+    'Researching eco-plastic formulations',
     'Researching suitable processing methods',
     'Investigating material properties',
     'Evaluating production costs',
@@ -504,7 +509,7 @@ export const partnership = {
     { title: 'Research institutions', text: 'Testing, characterization and joint research.' },
     { title: 'Material scientists', text: 'Formulation, binders and processing expertise.' },
     { title: 'Construction companies', text: 'Real-world requirements and future pilot applications.' },
-    { title: 'Manufacturing partners', text: 'Processing, forming and production know-how.' },
+    { title: 'Manufacturing partners', text: 'Processing, forming, molding and production know-how.' },
     { title: 'Sustainability organizations', text: 'Responsible sourcing and coastal stewardship.' },
     { title: 'Potential investors', text: 'Support for the next stages of development.' },
     { title: 'Industrial technology suppliers', text: 'Equipment for cleaning, drying and fiber processing.' },

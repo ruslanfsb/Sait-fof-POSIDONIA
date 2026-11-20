@@ -1,4 +1,5 @@
 import { company, footer, material, seo } from '../content/site.ts';
+import { logoSprite } from './brand.ts';
 import { html, raw, type Markup } from './html.ts';
 import {
   aboutSection,
@@ -31,6 +32,7 @@ function structuredData(): Markup {
       'Posidonia oceanica',
       'Sustainable materials',
       'Natural insulation materials',
+      'Bio-based plastics',
       'Marine plant fibers',
       'Circular economy',
     ],
@@ -76,7 +78,8 @@ export function renderHead(page: PageId): Markup {
 }
 
 function homeBody(): Markup {
-  return html`${siteHeader('')}
+  return html`${logoSprite()}
+  ${siteHeader('')}
   <main id="main">
     ${heroSection()}
     ${aboutSection()}
@@ -96,7 +99,8 @@ function privacyBody(): Markup {
   const contactLine = company.email
     ? html`by email at <a href="mailto:${company.email}">${company.email}</a>`
     : html`through the <a href="./#contact">contact section</a> of this website`;
-  return html`${siteHeader('./')}
+  return html`${logoSprite()}
+  ${siteHeader('./')}
   <main id="main" class="legal">
     <div class="container legal-inner">
       <p class="label"><span>Legal</span></p>

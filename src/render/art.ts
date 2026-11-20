@@ -125,123 +125,60 @@ function boardsArt(): Markup {
   return html`<g stroke-linecap="round" class="art-lift">${raw(out.join(''))}</g>`;
 }
 
-function packagingArt(): Markup {
-  const rand = seeded(37);
-  const P = isoProjector(240, 132, 30);
-  const W = 6;
-  const D = 4;
-  const H = 1;
+function ecoPlasticArt(): Markup {
+  const rand = seeded(61);
   const out: string[] = [];
+
+  // Molded sheet sample behind the pellets
+  const P = isoProjector(170, 92, 34);
+  const W = 5.2;
+  const D = 3.4;
+  const H = 0.2;
   const top: Pt[] = [P(0, 0, H), P(W, 0, H), P(W, D, H), P(0, D, H)];
   const left: Pt[] = [P(0, D, H), P(W, D, H), P(W, D, 0), P(0, D, 0)];
   const right: Pt[] = [P(W, 0, H), P(W, D, H), P(W, D, 0), P(W, 0, 0)];
-  out.push(`<polygon points="${poly(left)}" fill="#D3C8AE"/>`);
-  out.push(`<polygon points="${poly(right)}" fill="#C2B697"/>`);
-  out.push(`<polygon points="${poly(top)}" fill="#EAE3D2"/>`);
-  // Molded pockets (2 × 2)
-  const pockets: [number, number][] = [
-    [0.45, 0.45],
-    [3.2, 0.45],
-    [0.45, 2.15],
-    [3.2, 2.15],
-  ];
-  for (const [px, py] of pockets) {
-    const pw = 2.35;
-    const pd = 1.4;
-    const rim: Pt[] = [P(px, py, H), P(px + pw, py, H), P(px + pw, py + pd, H), P(px, py + pd, H)];
-    const floor: Pt[] = [
-      P(px + 0.18, py + 0.18, H - 0.7),
-      P(px + pw - 0.18, py + 0.18, H - 0.7),
-      P(px + pw - 0.18, py + pd - 0.18, H - 0.7),
-      P(px + 0.18, py + pd - 0.18, H - 0.7),
-    ];
-    out.push(`<polygon points="${poly(rim)}" fill="#CFC4A9"/>`);
-    out.push(`<polygon points="${poly(floor)}" fill="#B9AD8D"/>`);
-    out.push(`<polyline points="${poly([rim[0], floor[0]])}" stroke="${C.fiberDark}" stroke-opacity=".3" fill="none"/>`);
-  }
-  // Fiber speckle on the molded surface
-  for (let i = 0; i < 90; i++) {
-    const [x, y] = P(rand() * W, rand() * D, H);
+  out.push(`<polygon points="${poly(left)}" fill="#C4B898"/>`);
+  out.push(`<polygon points="${poly(right)}" fill="#B2A585"/>`);
+  out.push(`<polygon points="${poly(top)}" fill="#E4DCC8"/>`);
+  for (let i = 0; i < 80; i++) {
+    const [x, y] = P(0.15 + rand() * (W - 0.3), 0.15 + rand() * (D - 0.3), H);
     const a = rand() * Math.PI;
+    const l = 3 + rand() * 6;
     out.push(
-      `<path d="M${r(x)} ${r(y)}l${r(Math.cos(a) * 4)} ${r(Math.sin(a) * 2)}" stroke="${C.fiberDark}" stroke-width=".8" opacity=".35"/>`,
+      `<path d="M${r(x)} ${r(y)}l${r(Math.cos(a) * l)} ${r(Math.sin(a) * l * 0.5)}" stroke="${pick(rand, [C.fiberDark, C.fiber, C.teal])}" stroke-width=".9" opacity="${r(0.35 + rand() * 0.4)}"/>`,
     );
   }
-  // Floating dashed lid — signals a concept rather than a finished object
-  const lid: Pt[] = [P(0, 0, 3.1), P(W, 0, 3.1), P(W, D, 3.1), P(0, D, 3.1)];
-  out.push(
-    `<polygon class="art-lid" points="${poly(lid)}" fill="none" stroke="${C.teal}" stroke-width="1.3" stroke-dasharray="5 6"/>`,
-  );
-  return html`<g stroke-linecap="round">${raw(out.join(''))}</g>`;
-}
 
-function compositesArt(): Markup {
-  const rand = seeded(53);
-  const out: string[] = [];
-  const cols = 3;
-  const rows = 2;
-  const tw = 112;
-  const th = 104;
-  const gap = 14;
-  const ox = (480 - (cols * tw + (cols - 1) * gap)) / 2;
-  const oy = (320 - (rows * th + (rows - 1) * gap)) / 2;
-  const defs: string[] = [];
-  let k = 0;
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < cols; col++) {
-      const x = ox + col * (tw + gap);
-      const y = oy + row * (th + gap);
-      const id = `cmp-${k}`;
-      defs.push(`<clipPath id="${id}"><rect x="${r(x)}" y="${r(y)}" width="${tw}" height="${th}" rx="3"/></clipPath>`);
-      const fills = ['#E1D7C0', '#D3C7AA', C.teal, '#EDE7D9', '#C9BC9C', C.green];
-      const fill = fills[k] ?? '#E1D7C0';
-      const dark = fill === C.teal || fill === C.green;
-      const stroke = dark ? C.sea : C.fiberDark;
-      out.push(`<rect x="${r(x)}" y="${r(y)}" width="${tw}" height="${th}" rx="3" fill="${fill}"/>`);
-      const lines: string[] = [];
-      if (k === 0 || k === 5) {
-        for (let i = 0; i < 22; i++) {
-          const yy = y + 6 + i * 4.6 + rand() * 2;
-          lines.push(`<path d="M${r(x)} ${r(yy)}q${tw / 2} ${r((rand() - 0.5) * 6)} ${tw} 0"/>`);
-        }
-      } else if (k === 1) {
-        for (let i = -6; i < 14; i++) {
-          lines.push(`<path d="M${r(x + i * 10)} ${r(y)}l${th} ${th}"/>`);
-          lines.push(`<path d="M${r(x + i * 10)} ${r(y + th)}l${th} ${-th}"/>`);
-        }
-      } else if (k === 2) {
-        for (let i = 0; i < 70; i++) {
-          const px = x + rand() * tw;
-          const py = y + rand() * th;
-          const a = rand() * Math.PI;
-          lines.push(`<path d="M${r(px)} ${r(py)}l${r(Math.cos(a) * 12)} ${r(Math.sin(a) * 12)}"/>`);
-        }
-      } else if (k === 3) {
-        for (let i = 0; i < 160; i++) {
-          lines.push(`<circle cx="${r(x + rand() * tw)}" cy="${r(y + rand() * th)}" r="${r(0.6 + rand() * 1.2)}" stroke="none" fill="${C.fiberDark}" opacity=".5"/>`);
-        }
-      } else {
-        for (let i = 1; i < 12; i++) {
-          lines.push(`<circle cx="${r(x + tw)}" cy="${r(y + th)}" r="${i * 11}"/>`);
-        }
-      }
-      out.push(
-        `<g clip-path="url(#${id})" fill="none" stroke="${stroke}" stroke-width="1" opacity="${dark ? 0.55 : 0.6}">${lines.join('')}</g>`,
-      );
-      out.push(
-        `<text x="${r(x + 8)}" y="${r(y + th - 9)}" font-family="IBM Plex Mono, monospace" font-size="9" fill="${dark ? C.sea : C.ink}" opacity=".75">S-${String(k + 1).padStart(2, '0')}</text>`,
-      );
-      k++;
-    }
+  // Heap of compounded pellets in front
+  const base = 268;
+  const pellets: { x: number; y: number }[] = [];
+  for (let i = 0; i < 64; i++) {
+    const x = 300 + (rand() - 0.5) * 280;
+    const t = (x - 300) / 140;
+    const y = base - rand() * 92 * Math.sqrt(Math.max(0, 1 - t * t));
+    pellets.push({ x, y });
   }
-  return html`<defs>${raw(defs.join(''))}</defs><g class="art-tiles" stroke-linecap="round">${raw(out.join(''))}</g>`;
+  pellets.sort((a, b) => a.y - b.y);
+  for (const { x, y } of pellets) {
+    const rx = 10.5 + rand() * 3;
+    const ry = 7.5 + rand() * 1.5;
+    const rot = r((rand() - 0.5) * 50);
+    const fill = pick(rand, ['#E2D9C2', '#D6CCB0', '#CBBF9F', '#E9E1CD', '#C2B694']);
+    const specks = Array.from({ length: 3 }, () =>
+      `<circle cx="${r((rand() - 0.5) * rx * 1.2)}" cy="${r((rand() - 0.2) * ry * 0.9)}" r=".9" fill="${pick(rand, [C.fiberDark, C.teal])}" opacity=".55"/>`,
+    ).join('');
+    out.push(
+      `<g transform="translate(${r(x)} ${r(y)}) rotate(${rot})"><ellipse rx="${r(rx)}" ry="${r(ry)}" fill="${fill}" stroke="${C.ink}" stroke-opacity=".2" stroke-width=".8"/><ellipse cx="${r(-rx * 0.28)}" cy="${r(-ry * 0.38)}" rx="${r(rx * 0.42)}" ry="${r(ry * 0.26)}" fill="#fff" opacity=".45"/>${specks}</g>`,
+    );
+  }
+  out.push(`<path d="M40 ${base + 8}H440" stroke="${C.ink}" stroke-opacity=".25" stroke-width="1"/>`);
+  return html`<g stroke-linecap="round" class="art-drift">${raw(out.join(''))}</g>`;
 }
 
 const PRODUCT_ART: Record<ProductArt, () => Markup> = {
   loosefill: looseFillArt,
   boards: boardsArt,
-  packaging: packagingArt,
-  composites: compositesArt,
+  ecoplastic: ecoPlasticArt,
 };
 
 export function productArt(kind: ProductArt): Markup {

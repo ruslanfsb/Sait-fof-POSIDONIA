@@ -195,13 +195,13 @@ export function materialSection(): Markup {
 /* ------------------------------------------------------------------ */
 
 function productCard(p: Product, i: number): Markup {
-  return html`<article class="product product--${p.status}" data-reveal style="--d:${i % 2}">
+  return html`<article class="product" data-reveal style="--d:${i}">
     <div class="product-visual">
       ${productArt(p.art)}
       <span class="product-index mono" aria-hidden="true">${pad2(i + 1)}</span>
     </div>
     <div class="product-body">
-      <p class="status status--${p.status}"><span class="status-dot" aria-hidden="true"></span>${p.statusLabel}</p>
+      <p class="status status--development"><span class="status-dot" aria-hidden="true"></span>${p.statusLabel}</p>
       <h3 class="h3">${p.name}</h3>
       <p class="product-summary">${p.summary}</p>
       <div class="product-focus">
@@ -214,6 +214,7 @@ function productCard(p: Product, i: number): Markup {
 }
 
 export function innovationsSection(): Markup {
+  const future = innovations.future;
   return html`<section class="section section--paper" id="innovations" aria-labelledby="innovations-title">
     <div class="container">
       ${sectionHead({
@@ -222,12 +223,16 @@ export function innovationsSection(): Markup {
         title: innovations.title,
         id: 'innovations-title',
         intro: innovations.intro,
-        aside: html`<ul class="status-legend" aria-label="Status legend">
-          <li class="status status--development"><span class="status-dot" aria-hidden="true"></span>In development</li>
-          <li class="status status--research"><span class="status-dot" aria-hidden="true"></span>Future research</li>
-        </ul>`,
       })}
       <div class="products">${innovations.products.map(productCard)}</div>
+      <aside class="future" data-reveal aria-labelledby="future-title">
+        <div class="future-head">
+          <p class="status status--research"><span class="status-dot" aria-hidden="true"></span>${future.label}</p>
+          <h3 class="h4" id="future-title">${future.title}</h3>
+        </div>
+        <ul class="chips">${future.items.map((item) => html`<li>${item}</li>`)}</ul>
+        <p class="future-note">${future.note}</p>
+      </aside>
       <p class="fine-print" data-reveal>${innovations.disclaimer}</p>
     </div>
   </section>`;

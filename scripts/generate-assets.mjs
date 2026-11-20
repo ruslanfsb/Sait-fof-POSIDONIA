@@ -1,6 +1,8 @@
 /**
- * Generates brand assets in /public from the same brand mark used on the site:
- *   favicon.svg, favicon-32.png, apple-touch-icon.png, icon-512.png, og-image.png
+ * Generates brand assets in /public from the official logo paths
+ * (src/render/logo-paths.ts):
+ *   favicon.svg, favicon-32.png, apple-touch-icon.png, icon-512.png,
+ *   og-image.png, posidonia-logo.svg, site.webmanifest
  * Run after changing the logo:  npm run assets
  */
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -12,26 +14,32 @@ const root = resolve(import.meta.dirname, '..');
 const pub = (f) => resolve(root, 'public', f);
 
 const vite = await createServer({ root, server: { middlewareMode: true }, appType: 'custom', logLevel: 'error' });
-const { MARK_PATHS } = await vite.ssrLoadModule('/src/render/brand.ts');
+const { LOGO } = await vite.ssrLoadModule('/src/render/logo-paths.ts');
+const { standaloneMark, LOGO_COLORS } = await vite.ssrLoadModule('/src/render/brand.ts');
 await vite.close();
 
 const GREEN = '#123F37';
 const SEA = '#8CB8A4';
 const PAPER = '#F7F7F2';
 
-const markGroup = (color) => `
-  <path d="${MARK_PATHS.left}" fill="${color}" opacity=".72"/>
-  <path d="${MARK_PATHS.right}" fill="${color}" opacity=".72"/>
-  <path d="${MARK_PATHS.center}" fill="${color}"/>
-  <path d="${MARK_PATHS.shaft}" stroke="${color}" stroke-width="2.2" stroke-linecap="round" fill="none"/>`;
-
-// Square icon: mark centred on a deep-green tile.
-// (iOS rounds the corners of apple-touch-icon itself, so that one stays square.)
+// Square icon: full-color mark on a light tile (reads best at 16–32 px).
+// iOS rounds apple-touch-icon corners itself, so that one stays square.
 const iconSvg = (radius = 14) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="${radius}" fill="${GREEN}"/>
-  <g transform="translate(12 7.5)">${markGroup(SEA)}</g>
+  <rect width="64" height="64" rx="${radius}" fill="${PAPER}"/>
+  <svg x="6" y="10.5" width="52" height="38" viewBox="${LOGO.mark.viewBox}">${standaloneMark('color')}</svg>
 </svg>`;
 writeFileSync(pub('favicon.svg'), iconSvg());
+
+// Full-color logo (mark + wordmark) for press and partners — same layout as the original artwork.
+writeFileSync(
+  pub('posidonia-logo.svg'),
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="80 190 1094 750" width="1094" height="750">
+  <title>POSIDONIA</title>
+  <svg x="244" y="204" width="776" height="567" viewBox="${LOGO.mark.viewBox}">${standaloneMark('color')}</svg>
+  <path transform="translate(90 810)" d="${LOGO.wordmark.text}" fill="${LOGO_COLORS.ink}"/>
+</svg>
+`,
+);
 
 writeFileSync(
   pub('site.webmanifest'),
@@ -44,7 +52,7 @@ writeFileSync(
         { src: 'icon-512.png', sizes: '512x512', type: 'image/png' },
       ],
       theme_color: GREEN,
-      background_color: GREEN,
+      background_color: PAPER,
       display: 'browser',
     },
     null,
@@ -70,7 +78,7 @@ for (let i = 0; i < 70; i++) {
   const h = 180 + rand() * 330 * ((x - 420) / 800);
   const bend = 30 + rand() * 90;
   const w = 6 + rand() * 12;
-  const a = 0.18 + rand() * 0.45;
+  const a = 0.14 + rand() * 0.38;
   blades += `<path d="M${x} 650 Q${x + bend * 0.25} ${650 - h * 0.55} ${x + bend} ${650 - h}" stroke="rgba(140,184,164,${a.toFixed(2)})" stroke-width="${w.toFixed(1)}" stroke-linecap="round" fill="none"/>`;
 }
 
@@ -80,20 +88,24 @@ const ogHtml = `<!doctype html><html><head><style>
 html, body { margin: 0; }
 .og { position: relative; width: 1200px; height: 630px; overflow: hidden; background: ${GREEN}; color: ${PAPER}; font-family: Manrope; }
 .og svg.meadow { position: absolute; inset: 0; }
-.shade { position: absolute; inset: 0; background: radial-gradient(70% 70% at 90% 0%, rgba(140,184,164,.28), transparent 65%), linear-gradient(90deg, rgba(18,63,55,.95) 0%, rgba(18,63,55,.55) 55%, rgba(18,63,55,0) 85%); }
-.content { position: absolute; left: 80px; top: 72px; bottom: 72px; display: flex; flex-direction: column; justify-content: space-between; }
-.brand { display: flex; align-items: center; gap: 16px; font-weight: 650; font-size: 26px; letter-spacing: .2em; }
-.brand svg { width: 34px; height: 41px; }
-h1 { margin: 0; font-weight: 500; font-size: 76px; line-height: 1; letter-spacing: -.04em; max-width: 820px; }
+.shade { position: absolute; inset: 0; background: radial-gradient(70% 70% at 90% 0%, rgba(140,184,164,.25), transparent 65%), linear-gradient(90deg, rgba(18,63,55,.95) 0%, rgba(18,63,55,.55) 55%, rgba(18,63,55,0) 85%); }
+.content { position: absolute; left: 80px; top: 64px; bottom: 72px; display: flex; flex-direction: column; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 18px; }
+.brand .mark { width: 74px; height: 54px; }
+.brand .word { width: 210px; height: 24px; }
+h1 { margin: 0; font-weight: 500; font-size: 76px; line-height: 1; letter-spacing: -.04em; max-width: 860px; }
 h1 span { color: ${SEA}; display: block; }
 p { margin: 0; font-family: Plex; font-size: 20px; color: rgba(247,247,242,.72); }
 </style></head><body><div class="og">
 <svg class="meadow" viewBox="0 0 1200 630" width="1200" height="630">${blades}</svg>
 <div class="shade"></div>
 <div class="content">
-  <div class="brand"><svg viewBox="0 0 40 48">${markGroup(SEA)}</svg>POSIDONIA</div>
+  <div class="brand">
+    <svg class="mark" viewBox="${LOGO.mark.viewBox}">${standaloneMark('reversed')}</svg>
+    <svg class="word" viewBox="${LOGO.wordmark.viewBox}"><path d="${LOGO.wordmark.text}" fill="${PAPER}"/></svg>
+  </div>
   <h1>From the Mediterranean.<span>For a Sustainable Future.</span></h1>
-  <p>Sustainable materials from Mediterranean seagrass · Cyprus</p>
+  <p>Natural insulation &amp; eco-plastic from Mediterranean seagrass · Cyprus</p>
 </div></div></body></html>`;
 
 const browser = await chromium.launch();
@@ -112,8 +124,11 @@ for (const [file, size, radius] of [
   await page.setContent(
     `<html><body style="margin:0;background:transparent">${iconSvg(radius).replace('<svg ', `<svg width="${size}" height="${size}" `)}</body></html>`,
   );
-  await page.locator('svg').screenshot({ path: pub(file), omitBackground: true });
+  await page.locator('body > svg').screenshot({ path: pub(file), omitBackground: true });
 }
 
 await browser.close();
-console.log('Generated:', ['favicon.svg', 'favicon-32.png', 'apple-touch-icon.png', 'icon-512.png', 'og-image.png', 'site.webmanifest'].join(', '));
+console.log(
+  'Generated:',
+  ['favicon.svg', 'favicon-32.png', 'apple-touch-icon.png', 'icon-512.png', 'og-image.png', 'posidonia-logo.svg', 'site.webmanifest'].join(', '),
+);
